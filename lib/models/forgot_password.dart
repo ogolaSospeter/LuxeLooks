@@ -24,7 +24,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Image.asset('images/reset.jpg'),
+              Image.network(
+                  "https://img.freepik.com/premium-vector/hardware-rsa-token-two-factor-authentication-device_183665-337.jpg?w=740"),
               const Padding(padding: EdgeInsets.symmetric()),
               const Text(
                 "Forgot Password?",

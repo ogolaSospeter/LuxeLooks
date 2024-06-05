@@ -1,21 +1,22 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:luxelooks/Login.dart';
 import 'package:luxelooks/MainPage.dart';
-import 'package:luxelooks/SignUp.dart';
 import 'package:luxelooks/models/Notifications.dart';
 import 'package:luxelooks/models/forgot_password.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _emailcontroller = TextEditingController();
   final _passwordcontroller = TextEditingController();
+  final _confirmPasswordcontroller = TextEditingController();
   bool passwordVisible = true;
 
   String? _emailError;
@@ -41,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _emailcontroller.dispose();
     _passwordcontroller.dispose();
+    _confirmPasswordcontroller.dispose();
     super.dispose();
   }
 
@@ -57,15 +59,15 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Image.network(
-                "https://img.freepik.com/free-vector/round-cosmetics-concept_1284-16339.jpg?t=st=1717577367~exp=1717580967~hmac=3d971c534270b8f0141221942bd9c09393e87530f5a5af8eb2ef1ac9e3b6d384&w=740",
+                "https://img.freepik.com/free-vector/beauty-shop-online-composition_1284-16340.jpg?t=st=1717577080~exp=1717580680~hmac=656a1e4b23087e0a472588bdfa90ad4c54cbfdde39a4806a818a8a458816408b&w=740",
                 width: 800,
-                height: 350,
+                height: 300,
               ),
-              const Text('Welcome Back',
+              const Text('Welcome.',
                   style:
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0)),
               Text(
-                'Enter your credentials below to continue.',
+                'Enter your credentials below to Sign Up.',
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               const SizedBox(height: 23.0),
@@ -157,6 +159,55 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _confirmPasswordcontroller,
+                    obscureText: passwordVisible,
+                    keyboardType: TextInputType.visiblePassword,
+                    enableSuggestions: true,
+                    autofillHints: const [AutofillHints.password],
+                    textInputAction: TextInputAction.done,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Re-enter your password";
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Confirm Password",
+                      prefixIcon: const Icon(Icons.lock_outline),
+                      suffixIcon: InkWell(
+                        onTap: () {
+                          setState(() {
+                            passwordVisible = !passwordVisible;
+                          });
+                        },
+                        borderRadius: BorderRadius.circular(100),
+                        child: Icon(
+                          passwordVisible
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 2.0,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.error,
+                          width: 2.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                 ]),
               ),
               const SizedBox(height: 10.0),
@@ -167,23 +218,6 @@ class _LoginPageState extends State<LoginPage> {
                     color: Theme.of(context).colorScheme.error,
                   ),
                 ),
-              const SizedBox(height: 10.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (BuildContext context) {
-                    return const ForgotPassword();
-                  }));
-                },
-                child: const Text(
-                  "Forgot Password?",
-                  textAlign: TextAlign.end,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.normal,
-                      color: Colors.deepPurple),
-                ),
-              ),
               const SizedBox(height: 10.0),
               SizedBox(
                 width: 400,
@@ -216,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
-                  child: const Text("Sign In"),
+                  child: const Text("Sign Up"),
                 ),
               ),
               const SizedBox(height: 10),
@@ -224,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account?"),
+                  const Text("Already have an account?"),
                   MouseRegion(
                     onHover: (event) {
                       // Handle tooltip display here
@@ -233,7 +267,7 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(builder: (BuildContext context) {
-                            return const SignUpPage();
+                            return const LoginPage();
                           }),
                         );
                       },
@@ -243,7 +277,7 @@ class _LoginPageState extends State<LoginPage> {
                         showDuration: Duration(seconds: 2),
                         preferBelow: true,
                         child: Text(
-                          "Sign Up",
+                          "Sign In",
                           style: TextStyle(
                             fontSize: 13.0,
                             color: Color.fromARGB(255, 92, 4, 243),
