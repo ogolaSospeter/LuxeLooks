@@ -37,9 +37,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Main Dashboard"),
+        title: const Text("LuxeLooks Cosmetics"),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         elevation: 2.0,
+        titleTextStyle: const TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w500),
         clipBehavior: Clip.hardEdge,
         actions: [
           IconButton(

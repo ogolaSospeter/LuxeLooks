@@ -34,11 +34,11 @@ class _MainDrawerState extends State<MainDrawer> {
                       )),
                 ),
                 const Text(
-                  " Skyliner Service Finder",
+                  " LuxeLooks Cosmetics",
                   style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w400),
                 ),
                 const Text(
-                  " skylinersystemfinder@gmail.com ",
+                  " Your One Stop Cosmetics Shop.",
                   style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w400),
                 ),
               ],
@@ -48,9 +48,9 @@ class _MainDrawerState extends State<MainDrawer> {
           children: [
             const ListTile(
               title: Text(
-                "Technicals ",
+                "",
                 textDirection: TextDirection.ltr,
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 13),
                 textAlign: TextAlign.start,
               ),
             ),

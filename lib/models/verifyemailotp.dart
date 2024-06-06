@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:luxelooks/MainPage.dart';
+import 'package:email_otp/email_otp.dart';
 
 class VerifyOtp extends StatefulWidget {
-  const VerifyOtp({Key? key}) : super(key: key);
+  final String email;
+  const VerifyOtp({super.key, required this.email});
 
   @override
   State<VerifyOtp> createState() => _VerifyOtpState();
 }
 
 class _VerifyOtpState extends State<VerifyOtp> {
-  TextEditingController _emailcontroller = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+  final List<TextEditingController> _otpControllers =
+      List.generate(6, (index) => TextEditingController());
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  EmailOTP myAuth = EmailOTP();
+
+  @override
+  void dispose() {
+    for (var controller in _otpControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,125 +30,32 @@ class _VerifyOtpState extends State<VerifyOtp> {
       body: Container(
         padding: const EdgeInsets.all(20),
         alignment: Alignment.center,
+        color: Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [_buildOTPSentCard()],
         ),
-        color: Colors.white,
       ),
     );
   }
 
-  // Widget _buildEnterEmailCard() {
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     children: [
-  //       Image.network(
-  //           "https://img.freepik.com/free-vector/hands-women-holding-skin-care-products-bottles-with-serum-lotion-cream-flat-vector-illustration-cosmetics-beauty-treatment-concept-banner-website-design-landing-web-page_74855-24834.jpg?t=st=1717573023~exp=1717576623~hmac=ef48ea15218976051379c7072fc0e84d87d5f861f5248e5ea7943df9c03dada4&w=740"),
-  //       Padding(padding: EdgeInsets.only(top: 20)),
-  //       Text(
-  //         'Enter the Email to receive the OTP Code.',
-  //         style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-  //       ),
-  //       SizedBox(height: 50),
-  //       Form(
-  //         key: formKey,
-  //         child: Column(
-  //           children: [
-  //             TextFormField(
-  //               controller: _emailcontroller,
-  //               decoration: InputDecoration(
-  //                 floatingLabelAlignment: FloatingLabelAlignment.start,
-  //                 prefixIcon: Icon(Icons.lock_sharp),
-  //                 labelText: "Enter Email Address",
-  //                 focusedBorder: OutlineInputBorder(),
-  //               ),
-  //               keyboardType: TextInputType.emailAddress,
-  //               validator: (value) {
-  //                 String email = value ?? '';
-  //                 if (email.isEmpty) {
-  //                   return 'Please enter your email address';
-  //                 }
-  //                 // Add additional email validation if needed
-  //                 return null;
-  //               },
-  //             ),
-  //             SizedBox(height: 30),
-  //             SizedBox(
-  //               width: 400,
-  //               height: 50,
-  //               child: MaterialButton(
-  //                 color: Colors.blueAccent,
-  //                 onPressed: () {
-  //                   if (formKey.currentState!.validate()) {
-  //                     // Resend OTP logic goes here
-  //                   }
-  //                 },
-  //                 child: Text(
-  //                   'Resend OTP Code',
-  //                   style: TextStyle(color: Colors.white),
-  //                 ),
-  //                 clipBehavior: Clip.antiAliasWithSaveLayer,
-  //                 shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(10.0),
-  //                 ),
-  //               ),
-  //             ),
-  //             SizedBox(height: 15),
-  //             SizedBox(
-  //               width: 300,
-  //               height: 50,
-  //               child: MaterialButton(
-  //                 color: const Color.fromARGB(255, 100, 153, 245),
-  //                 onPressed: () {
-  //                   setState(() {
-  //                     _isOTPSent = true;
-  //                   });
-  //                 },
-  //                 child: Text(
-  //                   "Enter OTP Code",
-  //                   style: TextStyle(color: Colors.white),
-  //                 ),
-  //                 clipBehavior: Clip.antiAliasWithSaveLayer,
-  //                 shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(10.0),
-  //                 ),
-  //               ),
-  //             ),
-  //             SizedBox(height: 20),
-  //           ],
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
   Widget _buildOTPSentCard() {
-    const email = "skylinersystemdevelopers@gmail.com";
-    final maskedEmail = maskEmail(email);
+    final maskedEmail = maskEmail(widget.email);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.network(
             "https://img.freepik.com/free-vector/hands-women-holding-skin-care-products-bottles-with-serum-lotion-cream-flat-vector-illustration-cosmetics-beauty-treatment-concept-banner-website-design-landing-web-page_74855-24834.jpg?t=st=1717573023~exp=1717576623~hmac=ef48ea15218976051379c7072fc0e84d87d5f861f5248e5ea7943df9c03dada4&w=740"),
-        const Padding(padding: EdgeInsets.only(top: 20)),
+        const SizedBox(height: 20),
         Text(
           'An OTP Code has been sent to $maskedEmail with a link to verify your account. If you have not received the email in a few minutes, please check your spam/junk folder.',
           style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 50),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            OTPWidget(digit: "*"),
-            OTPWidget(digit: "*"),
-            OTPWidget(digit: "*"),
-            OTPWidget(digit: "*"),
-            OTPWidget(digit: "*")
-          ],
-        ),
+        _buildOtpInputFields(),
         const SizedBox(height: 30),
         SizedBox(
           width: 300,
@@ -143,8 +63,23 @@ class _VerifyOtpState extends State<VerifyOtp> {
           child: MaterialButton(
             color: Colors.blueAccent,
             onPressed: () {
-              // Validate OTP logic goes here
-              setState(() {});
+              if (formKey.currentState!.validate()) {
+                //compare the OTP input by the user and the OTP sent to the email
+                final otp = _otpControllers.map((e) => e.text).join();
+                if (myAuth.verifyOTP()) {
+                  //navigate to the next screen
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const MyHomePage()),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Invalid OTP. Please try again.'),
+                    ),
+                  );
+                }
+                // Logic to verify OTP
+              }
             },
             clipBehavior: Clip.antiAliasWithSaveLayer,
             shape: RoundedRectangleBorder(
@@ -165,9 +100,8 @@ class _VerifyOtpState extends State<VerifyOtp> {
             children: [
               IconButton(
                 onPressed: () {
-                  setState(() {
-                    // _isOTPSent = false;
-                  });
+                  // Logic to resend OTP
+                  setState(() {});
                 },
                 icon: const Icon(
                   Icons.arrow_back,
@@ -185,29 +119,43 @@ class _VerifyOtpState extends State<VerifyOtp> {
       ],
     );
   }
-}
 
-class OTPWidget extends StatelessWidget {
-  final String digit;
-
-  const OTPWidget({super.key, required this.digit});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 3),
-      width: 57,
-      height: 60,
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(10),
+  Widget _buildOtpInputFields() {
+    return Form(
+      key: formKey,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(6, (index) {
+          return _buildOtpTextField(index);
+        }),
       ),
-      child: Center(
-        child: Text(
-          digit,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          selectionColor: Colors.deepOrangeAccent,
+    );
+  }
+
+  Widget _buildOtpTextField(int index) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      width: 40,
+      child: TextFormField(
+        controller: _otpControllers[index],
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          counterText: '',
         ),
+        textAlign: TextAlign.center,
+        keyboardType: TextInputType.number,
+        maxLength: 1,
+        onChanged: (value) {
+          if (value.length == 1 && index < 5) {
+            FocusScope.of(context).nextFocus();
+          }
+        },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return '';
+          }
+          return null;
+        },
       ),
     );
   }
@@ -219,113 +167,11 @@ String maskEmail(String email) {
   final domain = emailParts[1];
 
   if (username.length <= 6) {
-    // If the username is too short to mask effectively, just show the first character and mask the rest
     return '${username.substring(0, 1)}*****@${domain}';
   }
 
   final firstPart = username.substring(0, 4);
   final lastPart = username.substring(username.length - 2);
   final maskedUsername = '$firstPart*****$lastPart';
-  final maskedEmail = '$maskedUsername@$domain';
-
-  return maskedEmail;
+  return '$maskedUsername@$domain';
 }
-
-
-
-
-// import 'package:flutter/material.dart';
-
-// class VerifyOtp extends StatefulWidget {
-//   const VerifyOtp({super.key});
-
-//   @override
-//   State<VerifyOtp> createState() => _VerifyOtpState();
-// }
-
-// class _VerifyOtpState extends State<VerifyOtp> {
-//   @override
-//   Widget build(BuildContext context) {
-//     TextEditingController _emailcontroller = TextEditingController();
-
-//     final formKey = GlobalKey<FormState>();
-
-//     return Container(
-//       child: Scaffold(
-//         body: SingleChildScrollView(
-//           child: Container(
-//             padding: EdgeInsets.only(top: 40, left: 15, right: 15),
-//             child: Column(
-//               children: [
-//                 Image.asset('images/send_email.jpg'),
-//                 Padding(padding: EdgeInsets.only(top: 20)),
-//                 Text(
-//                   "Verify OTP",
-//                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 27),
-//                 ),
-//                 Text(
-//                   'An OTP Code has been sent to skylinersystemdevelopers@gmail.com with a link to verify your account. If you have not received the email in a few minutes, please check your spam/junk folder.',
-//                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-//                   textAlign: TextAlign.center,
-//                 ),
-//                 SizedBox(height: 50),
-//                 Form(
-//                   key: formKey,
-//                   child: Column(
-//                     children: [
-//                       TextFormField(
-//                         controller: _emailcontroller,
-//                         decoration: InputDecoration(
-//                           floatingLabelAlignment: FloatingLabelAlignment.start,
-//                           prefixIcon: Icon(Icons.lock_sharp),
-//                           label: Text("Enter Email Address."),
-//                           focusedBorder: OutlineInputBorder(),
-//                         ),
-//                         keyboardType: TextInputType.emailAddress,
-//                       ),
-//                       SizedBox(height: 30),
-//                       SizedBox(
-//                         width: 400,
-//                         height: 50,
-//                         child: MaterialButton(
-//                           color: Colors.blueAccent,
-//                           onPressed: () {},
-//                           child: Text(
-//                             'Resend OTP Code',
-//                             style: TextStyle(color: Colors.white),
-//                           ),
-//                           clipBehavior: Clip.antiAliasWithSaveLayer,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(10.0),
-//                           ),
-//                         ),
-//                       ),
-//                       SizedBox(height: 15),
-//                       SizedBox(
-//                         width: 300,
-//                         height: 50,
-//                         child: MaterialButton(
-//                           color: const Color.fromARGB(255, 100, 153, 245),
-//                           onPressed: () {},
-//                           child: Text(
-//                             "Enter OTP Code",
-//                             style: TextStyle(color: Colors.white),
-//                           ),
-//                           clipBehavior: Clip.antiAliasWithSaveLayer,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(10.0),
-//                           ),
-//                         ),
-//                       ),
-//                       SizedBox(height: 20),
-//                     ],
-//                   ),
-//                 )
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

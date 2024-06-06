@@ -9,60 +9,17 @@ class DashScreen extends StatefulWidget {
 }
 
 class _DashScreenState extends State<DashScreen> {
-  final TextEditingController _searchcontroller = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Form(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 5),
-              Center(
-                child: SizedBox(
-                  width: 300,
-                  height: 35,
-                  child: TextFormField(
-                    maxLines: 1,
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                      hintText: 'Search for a Service Provider',
-                      hintStyle: const TextStyle(fontStyle: FontStyle.normal),
-                      suffixIcon: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.search,
-                            size: 30,
-                          )),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    autofocus: false,
-                    controller: _searchcontroller,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    textInputAction: TextInputAction.search,
-                    textCapitalization: TextCapitalization.words,
-                    enableSuggestions: true,
-                    enabled: true,
-                    enableInteractiveSelection: true,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        const SizedBox(height: 5),
-        const Text(
+        SizedBox(height: 10.0),
+        Text(
           "Top Rated",
           style: TextStyle(fontSize: 25),
         ),
-        const CardDisplay(),
-        const SizedBox(height: 5.0),
+        SizedBox(height: 5.0),
       ],
     );
   }
