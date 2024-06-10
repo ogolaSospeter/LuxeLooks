@@ -25,8 +25,8 @@ class _NotificationsState extends State<Notifications> {
             ),
             const Text(
                 'Your Notifications for booked jobs Should Appear Here.\n'),
-            Image.asset(
-              'images/notif.png',
+            Image.network(
+              "https://img.freepik.com/premium-vector/faceless-girl-whips-out-reconciles-dress-via-mobile-app-people-ordering-online-store-smartphone-screen-color-2d-graphic-vector-flat-style-illustration_776652-3071.jpg?w=740",
               height: 300,
               width: 300,
             ),

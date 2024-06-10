@@ -14,8 +14,8 @@ class SettingsPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: <Widget>[
-            Image.asset(
-              'images/sett.jpg',
+            Image.network(
+              "https://img.freepik.com/premium-photo/flat-lay-feminine-arrangement-with-phone-accessories-purse-cosmetics-white_408798-6771.jpg?w=826",
               width: 300,
               height: 300,
             ),

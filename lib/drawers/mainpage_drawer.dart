@@ -22,17 +22,14 @@ class _MainDrawerState extends State<MainDrawer> {
             child: Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 20.0),
-                  height: 80,
-                  decoration: const BoxDecoration(
+                    margin: const EdgeInsets.only(top: 20.0),
+                    height: 80,
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.cyan,
-                      image: DecorationImage(
-                        image: AssetImage('images/jobs.png'),
-                        colorFilter:
-                            ColorFilter.mode(Colors.white, BlendMode.darken),
-                      )),
-                ),
+                    ),
+                    child: Image.network(
+                        "https://img.freepik.com/free-vector/bag-with-cosmetics-realistic-composition-with-isolated-image-open-vanity-case-with-brushes-lipstick-illustration_1284-57081.jpg?t=st=1718015935~exp=1718019535~hmac=dbc3691e1e5d11212c5498b6af2e5f0a6eed907d7f548c0ee860027dfddb8320&w=740")),
                 const Text(
                   " LuxeLooks Cosmetics",
                   style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w400),
