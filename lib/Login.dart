@@ -1,10 +1,12 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, unused_import, depend_on_referenced_packages
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:luxelooks/MainPage.dart';
 import 'package:luxelooks/SignUp.dart';
 import 'package:luxelooks/models/Notifications.dart';
 import 'package:luxelooks/models/forgot_password.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -48,18 +50,19 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,
-          padding: const EdgeInsets.only(left: 12, right: 12, top: 20),
+          padding: const EdgeInsets.only(left: 12, right: 12, top: 80),
           color: Colors.white,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Image.network(
                 "https://img.freepik.com/free-vector/round-cosmetics-concept_1284-16339.jpg?t=st=1717577367~exp=1717580967~hmac=3d971c534270b8f0141221942bd9c09393e87530f5a5af8eb2ef1ac9e3b6d384&w=740",
-                width: 800,
-                height: 350,
+                width: 500,
+                height: 250,
               ),
               const Text('Welcome Back',
                   style:
@@ -117,7 +120,26 @@ class _LoginPageState extends State<LoginPage> {
                     textInputAction: TextInputAction.done,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Please enter your password";
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Error"),
+                              content:
+                                  const Text("Please enter your password."),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("OK"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+
+                        // return "Please enter your password";
                       }
                       return null;
                     },
@@ -161,11 +183,17 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 10.0),
               if (_emailError != null)
-                Text(
-                  _emailError!,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+                AlertDialog(
+                  title: const Text("Error"),
+                  content: Text(_emailError!),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("OK"),
+                    ),
+                  ],
                 ),
               const SizedBox(height: 10.0),
               GestureDetector(
@@ -189,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                 width: 400,
                 height: 40,
                 child: MaterialButton(
-                  onPressed: () {
+                  onPressed: () async {
                     String email = _emailcontroller.text;
                     String password = _passwordcontroller.text;
 
@@ -200,14 +228,65 @@ class _LoginPageState extends State<LoginPage> {
                     if (email.isNotEmpty &&
                         password.isNotEmpty &&
                         _emailError == null) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text("Success"),
+                            content:
+                                const Text("You have successfully logged in."),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("OK"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (BuildContext context) {
                           return const MyHomePage();
                         }),
                       );
+
+                      //###################
+                      try {
+                        final credential = await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                                email: email, password: password);
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'user-not-found') {
+                          print('No user found for that email.');
+                        } else if (e.code == 'wrong-password') {
+                          print('Wrong password provided for that user.');
+                        }
+                      }
+                      //#################
                     } else {
-                      if (password.isEmpty && email.isEmpty) {
-                        _emailError = "Fields Cannot be Empty.";
+                      if (password.isEmpty && email.isEmpty ||
+                          email.isEmpty ||
+                          password.isEmpty) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Error"),
+                              content: const Text("Fields Cannot be Empty."),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("OK"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        // _emailError = "Fields Cannot be Empty.";
                       }
                     }
                   },

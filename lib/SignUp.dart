@@ -1,5 +1,6 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:luxelooks/Login.dart';
 import 'package:luxelooks/MainPage.dart';
@@ -50,6 +51,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,
@@ -223,7 +225,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 width: 400,
                 height: 40,
                 child: MaterialButton(
-                  onPressed: () {
+                  onPressed: () async {
                     String email = _emailcontroller.text;
                     String password = _passwordcontroller.text;
 
@@ -234,11 +236,62 @@ class _SignUpPageState extends State<SignUpPage> {
                     if (email.isNotEmpty &&
                         password.isNotEmpty &&
                         _emailError == null) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                          return const MyHomePage();
-                        }),
-                      );
+                      try {
+                        final credential = await FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                          email: email,
+                          password: password,
+                        );
+                        if (credential.user != null) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                              return const MyHomePage();
+                            }),
+                          );
+                        }
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'weak-password') {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Error"),
+                                  content: const Text(
+                                      "The password provided is too weak."),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("OK"),
+                                    ),
+                                  ],
+                                );
+                              });
+                          // print('The password provided is too weak.');
+                        } else if (e.code == 'email-already-in-use') {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Error"),
+                                  content: const Text(
+                                      "The account already exists for that email."),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("OK"),
+                                    ),
+                                  ],
+                                );
+                              });
+                          // print('The account already exists for that email.');
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
                     } else {
                       if (password.isEmpty && email.isEmpty) {
                         _emailError = "Fields Cannot be Empty.";

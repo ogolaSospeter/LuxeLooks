@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:luxelooks/Screens/Dash.dart';
-import 'package:luxelooks/displays/cards/new_booking.dart';
 import 'package:luxelooks/drawers/mainpage_drawer.dart';
 import 'package:luxelooks/models/Bookings.dart';
 import 'package:luxelooks/models/History.dart';
@@ -41,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         elevation: 2.0,
         titleTextStyle: const TextStyle(
-            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w500),
+            color: Colors.white, fontSize: 17.0, fontWeight: FontWeight.w500),
         clipBehavior: Clip.hardEdge,
         actions: [
           IconButton(
@@ -51,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   return const SettingsPage();
                 }));
               },
-              icon: const Icon(Icons.payment)),
+              icon: const Icon(Icons.shopping_cart, color: Colors.white)),
           IconButton(
               onPressed: () {
                 Navigator.of(context)
@@ -61,44 +60,28 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               icon: const Icon(
                 Icons.notifications,
-                color: Colors.black,
+                color: Colors.white,
               ))
         ],
       ),
       drawer: const Drawer(backgroundColor: Colors.white, child: MainDrawer()),
-      floatingActionButton: FloatingActionButton.small(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (BuildContext context) {
-            return const NewBooking();
-          }));
-        },
-        elevation: 3.0,
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.add, size: 20.0),
-            Text(
-              "Add",
-              style: TextStyle(fontSize: 10.0),
-            )
-          ],
-        ),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: const Color.fromARGB(255, 75, 73, 73),
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_repair_service),
-            label: 'History ',
+            icon: Icon(Icons.recommend),
+            label: 'Last Orders',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.holiday_village),
+            icon: Icon(Icons.home_mini_rounded),
             label: 'Home',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.add_task), label: "Bookings")
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star_rate_sharp, color: Colors.amber),
+            label: 'Favourites',
+          ),
         ],
       ),
       body: Container(
