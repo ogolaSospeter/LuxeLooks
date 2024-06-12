@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:luxelooks/Login.dart';
@@ -90,7 +91,9 @@ class _MainDrawerState extends State<MainDrawer> {
               ),
             ),
             ListTile(
-              onTap: () {
+              onTap: () async {
+                // Firebase sign out
+                await FirebaseAuth.instance.signOut();
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (BuildContext context) {
                   return const LoginPage();

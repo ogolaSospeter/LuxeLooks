@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:luxelooks/Login.dart';
 import 'package:luxelooks/MainPage.dart';
-import 'package:luxelooks/models/Notifications.dart';
-import 'package:luxelooks/models/forgot_password.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -243,6 +241,27 @@ class _SignUpPageState extends State<SignUpPage> {
                           password: password,
                         );
                         if (credential.user != null) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Success"),
+                                  content: const Text(
+                                      "Account created successfully."),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("OK"),
+                                    ),
+                                  ],
+                                  icon: const Icon(Icons.check_circle,
+                                      size: 65.0,
+                                      color: Color.fromARGB(255, 1, 54, 3)),
+                                );
+                              });
+                          await Future.delayed(const Duration(seconds: 3));
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (BuildContext context) {
                               return const MyHomePage();
@@ -266,6 +285,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                       child: const Text("OK"),
                                     ),
                                   ],
+                                  icon: const Icon(Icons.password,
+                                      size: 50.0, color: Colors.red),
                                 );
                               });
                           // print('The password provided is too weak.');

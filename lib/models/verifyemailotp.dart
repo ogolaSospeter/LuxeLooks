@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:luxelooks/MainPage.dart';
 import 'package:email_otp/email_otp.dart';
+import 'package:luxelooks/models/forgot_password.dart';
 
 class VerifyOtp extends StatefulWidget {
   final String email;
@@ -65,8 +66,8 @@ class _VerifyOtpState extends State<VerifyOtp> {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 //compare the OTP input by the user and the OTP sent to the email
-                final otp = _otpControllers.map((e) => e.text).join();
-                if (myAuth.verifyOTP()) {
+                var userOtp = _otpControllers.map((e) => e.text).join();
+                if (myAuth.verifyOTP(otp: userOtp)) {
                   //navigate to the next screen
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => const MyHomePage()),
@@ -74,7 +75,8 @@ class _VerifyOtpState extends State<VerifyOtp> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Invalid OTP. Please try again.'),
+                      content: Text(
+                          'Invalid OTP. Please try again. If you have not received the email, click on Resend OTP.'),
                     ),
                   );
                 }
@@ -94,28 +96,26 @@ class _VerifyOtpState extends State<VerifyOtp> {
         const SizedBox(height: 20),
         SizedBox(
           height: 40,
-          width: 300,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed: () {
-                  // Logic to resend OTP
-                  setState(() {});
-                },
-                icon: const Icon(
-                  Icons.arrow_back,
-                  size: 26,
-                ),
-              ),
-              const SizedBox(width: 30),
-              const Text(
-                "Resend OTP",
-                style: TextStyle(color: Colors.black),
-              ),
-            ],
+          width: 200,
+          child: MaterialButton(
+            color: Color.fromARGB(255, 101, 151, 238),
+            onPressed: () {
+              // Logic to resend OTP
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const ForgotPassword()),
+              );
+            },
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: const Text(
+              "Resend OTP",
+              style: TextStyle(color: Color.fromARGB(255, 219, 4, 22)),
+            ),
           ),
         ),
+        const SizedBox(width: 30),
       ],
     );
   }
@@ -167,11 +167,11 @@ String maskEmail(String email) {
   final domain = emailParts[1];
 
   if (username.length <= 6) {
-    return '${username.substring(0, 1)}*****@${domain}';
+    return '${username.substring(0, 1)}******@${domain}';
   }
 
   final firstPart = username.substring(0, 4);
   final lastPart = username.substring(username.length - 2);
-  final maskedUsername = '$firstPart*****$lastPart';
+  final maskedUsername = '$firstPart******$lastPart';
   return '$maskedUsername@$domain';
 }

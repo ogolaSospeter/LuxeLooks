@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:luxelooks/details/homepage.dart';
 
 class DashScreen extends StatefulWidget {
   const DashScreen({super.key});
@@ -10,22 +11,24 @@ class DashScreen extends StatefulWidget {
 class _DashScreenState extends State<DashScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 10.0),
-        Text(
+        const SizedBox(height: 10.0),
+        const Text(
           "Featured Products",
           style: TextStyle(fontSize: 18),
         ),
-        SizedBox(height: 5.0),
-        FeaturedProducts(),
-        SizedBox(height: 10.0),
-        Text(
+        const SizedBox(height: 5.0),
+        const FeaturedProducts(),
+        const SizedBox(height: 10.0),
+        const Text(
           "Top Rated",
           style: TextStyle(fontSize: 18),
         ),
-        SizedBox(height: 5.0),
+        const SizedBox(height: 5.0),
+        Expanded(child: HomePage()),
+        // HomePage()
       ],
     );
   }
@@ -79,3 +82,47 @@ class _FeaturedCard extends StatelessWidget {
     );
   }
 }
+
+
+
+// class TopRated extends StatelessWidget {
+//   TopRated({super.key});
+
+//   final AppController controller = Get.put(AppController());
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return SingleChildScrollView(
+//       child: Padding(
+//         padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+//         child: SizedBox(
+//           height: 700,
+//           child: Obx(
+//             () => controller.isLoading.value
+//                 ? const Center(
+//                     child: CircularProgressIndicator(),
+//                   )
+//                 : StaggeredGridView.countBuilder(
+//                     shrinkWrap: true,
+//                     physics: const BouncingScrollPhysics(),
+//                     itemCount: controller.productList.length,
+//                     crossAxisSpacing: 20,
+//                     mainAxisSpacing: 25,
+//                     crossAxisCount: 2,
+//                     itemBuilder: (context, index) {
+//                       return GestureDetector(
+//                         onTap: () {
+//                           Get.to(() => DetailsPage(index: index));
+//                         },
+//                         child: ProductWidget(
+//                             product: controller.productList[index]),
+//                       );
+//                     },
+//                     staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
+//                   ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "279316290904",
+    "project_id": "luxelooks-305b2",
+    "storage_bucket": "luxelooks-305b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279316290904:android:6fc43e24ac28b6aa75992d",
+        "android_client_info": {
+          "package_name": "com.example.luxelooks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279316290904-eneklk7e1reavtvqg6sdv3irj3f3as1k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWXd4HbYddLsbMC19WY8L5YS8UlSUGugk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279316290904-eneklk7e1reavtvqg6sdv3irj3f3as1k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

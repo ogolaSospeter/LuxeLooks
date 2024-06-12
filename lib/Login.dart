@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, unused_import, depend_on_referenced_packages
+// ignore_for_file: file_names, unused_import, depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +7,10 @@ import 'package:luxelooks/SignUp.dart';
 import 'package:luxelooks/models/Notifications.dart';
 import 'package:luxelooks/models/forgot_password.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:status_alert/status_alert.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -221,54 +221,79 @@ class _LoginPageState extends State<LoginPage> {
                     String email = _emailcontroller.text;
                     String password = _passwordcontroller.text;
 
-                    setState(() {
-                      _emailError = emailValidator(email);
-                    });
-
                     if (email.isNotEmpty &&
                         password.isNotEmpty &&
                         _emailError == null) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text("Success"),
-                            content:
-                                const Text("You have successfully logged in."),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text("OK"),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                          return const MyHomePage();
-                        }),
-                      );
-
-                      //###################
                       try {
                         final credential = await FirebaseAuth.instance
                             .signInWithEmailAndPassword(
-                                email: email, password: password);
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
-                          print('No user found for that email.');
-                        } else if (e.code == 'wrong-password') {
-                          print('Wrong password provided for that user.');
+                          email: email,
+                          password: password,
+                        );
+                        //use the credential to approve the login
+                        if (credential.user == null) {
+                          throw FirebaseAuthException(
+                              code: 'user-not-found',
+                              message: 'No user found for that email.');
+                        } else {
+                          // Show success dialog
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                  title: const Text("Success"),
+                                  content: const Text(
+                                      "You have successfully logged in."),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("OK"),
+                                    ),
+                                  ],
+                                  icon: const Icon(
+                                    Icons.check_circle,
+                                    color: Color.fromARGB(255, 1, 92, 4),
+                                    size: 70,
+                                  ));
+                            },
+                          );
+                          //delay the navigation to show the dialog
+                          await Future.delayed(const Duration(seconds: 3));
+                          // Navigate to home page
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                              return const MyHomePage();
+                            }),
+                          );
                         }
+                      } on FirebaseAuthException catch (e) {
+                        String errorMessage;
+                        if (e.code == 'user-not-found') {
+                          errorMessage = 'No user found for that email.';
+                        } else if (e.code == 'wrong-password') {
+                          errorMessage =
+                              'Wrong Email or Password provided for that user.';
+                        } else {
+                          errorMessage = 'Invalid Login! Please try again.';
+                        }
+
+                        StatusAlert.show(
+                          context,
+                          duration: const Duration(seconds: 2),
+                          title: 'Error!',
+                          margin: const EdgeInsets.all(70),
+                          backgroundColor: Colors.white,
+                          subtitle: errorMessage,
+                          configuration: const IconConfiguration(
+                              icon: Icons.error,
+                              size: 50,
+                              color: Colors.redAccent),
+                        );
                       }
-                      //#################
                     } else {
-                      if (password.isEmpty && email.isEmpty ||
-                          email.isEmpty ||
-                          password.isEmpty) {
+                      if (password.isEmpty || email.isEmpty) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -283,10 +308,11 @@ class _LoginPageState extends State<LoginPage> {
                                   child: const Text("OK"),
                                 ),
                               ],
+                              icon: const Icon(Icons.error,
+                                  color: Colors.red, size: 50),
                             );
                           },
                         );
-                        // _emailError = "Fields Cannot be Empty.";
                       }
                     }
                   },

@@ -32,8 +32,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     );
     if (await myAuth.sendOTP()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("OTP has been sent")),
+        const SnackBar(
+            content:
+                Text("OTP has been sent. The sent otp is valid for 5 minutes")),
       );
+
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => VerifyOtp(

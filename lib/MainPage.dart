@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:luxelooks/Screens/Dash.dart';
+import 'package:luxelooks/details/homepage.dart';
 import 'package:luxelooks/drawers/mainpage_drawer.dart';
 import 'package:luxelooks/models/Bookings.dart';
 import 'package:luxelooks/models/History.dart';
@@ -17,7 +18,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
     const History(),
-    const Notifications(),
+    const MyHomePage(),
     const Bookings()
   ];
 
