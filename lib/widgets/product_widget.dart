@@ -22,7 +22,7 @@ class ProductWidget extends StatelessWidget {
           Stack(
             children: [
               Container(
-                height: 120,
+                height: 90,
                 padding: const EdgeInsets.only(top: 10),
                 decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
@@ -33,8 +33,8 @@ class ProductWidget extends StatelessWidget {
                         image: NetworkImage(product.imageLink))),
               ),
               Positioned(
-                  right: 8,
-                  top: 10,
+                  right: 5,
+                  top: 7,
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: const BoxDecoration(
@@ -46,7 +46,7 @@ class ProductWidget extends StatelessWidget {
                   ))
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 5),
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 5),
             child: Text(
@@ -56,7 +56,7 @@ class ProductWidget extends StatelessWidget {
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           product.rating != null
               ? Container(
                   margin: const EdgeInsets.only(left: 10),
@@ -87,7 +87,7 @@ class ProductWidget extends StatelessWidget {
                   ),
                 )
               : const SizedBox(),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           Padding(
             padding: const EdgeInsets.only(left: 10, bottom: 10),
             child: Text(

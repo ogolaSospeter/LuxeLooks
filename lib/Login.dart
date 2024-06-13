@@ -284,12 +284,13 @@ class _LoginPageState extends State<LoginPage> {
                           duration: const Duration(seconds: 2),
                           title: 'Error!',
                           margin: const EdgeInsets.all(70),
-                          backgroundColor: Colors.white,
+                          backgroundColor: Colors.grey[300]!,
                           subtitle: errorMessage,
                           configuration: const IconConfiguration(
                               icon: Icons.error,
                               size: 50,
                               color: Colors.redAccent),
+                          dismissOnBackgroundTap: true,
                         );
                       }
                     } else {

@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
         child: SizedBox(
-          height: 500,
+          height: 300,
           child: Obx(
             () => controller.isLoading.value
                 ? const Center(

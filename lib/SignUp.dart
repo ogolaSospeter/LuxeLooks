@@ -1,7 +1,9 @@
 // ignore_for_file: file_names, use_build_context_synchronously
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:luxelooks/Login.dart';
 import 'package:luxelooks/MainPage.dart';
 
@@ -17,6 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordcontroller = TextEditingController();
   final _confirmPasswordcontroller = TextEditingController();
   bool passwordVisible = true;
+  bool _hasNetwork = true;
 
   String? _emailError;
 
@@ -42,7 +45,15 @@ class _SignUpPageState extends State<SignUpPage> {
     _emailcontroller.dispose();
     _passwordcontroller.dispose();
     _confirmPasswordcontroller.dispose();
+    _checkNetwork();
     super.dispose();
+  }
+
+  Future<void> _checkNetwork() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    setState(() {
+      _hasNetwork = connectivityResult != ConnectivityResult.none;
+    });
   }
 
   @override
@@ -58,11 +69,17 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image.network(
-                "https://img.freepik.com/free-vector/beauty-shop-online-composition_1284-16340.jpg?t=st=1717577080~exp=1717580680~hmac=656a1e4b23087e0a472588bdfa90ad4c54cbfdde39a4806a818a8a458816408b&w=740",
-                width: 800,
-                height: 300,
-              ),
+              _hasNetwork
+                  ? Image.network(
+                      "https://img.freepik.com/free-vector/beauty-shop-online-composition_1284-16340.jpg?t=st=1717577080~exp=1717580680~hmac=656a1e4b23087e0a472588bdfa90ad4c54cbfdde39a4806a818a8a458816408b&w=740",
+                      width: 800,
+                      height: 300,
+                    )
+                  : SvgPicture.asset(
+                      'assets/no_network.svg', // Ensure you have this SVG file in your assets
+                      width: 500,
+                      height: 250,
+                    ),
               const Text('Welcome.',
                   style:
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0)),
@@ -233,7 +250,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     if (email.isNotEmpty &&
                         password.isNotEmpty &&
-                        _emailError == null) {
+                        _emailError == null &&
+                        CheckPasswordStrength(password)) {
                       try {
                         final credential = await FirebaseAuth.instance
                             .createUserWithEmailAndPassword(
@@ -369,4 +387,25 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
+}
+
+//Function to check the password strength
+// ignore: non_constant_identifier_names
+bool CheckPasswordStrength(String password) {
+  // ignore: non_constant_identifier_names
+  int n = password.length;
+  // ignore: non_constant_identifier_names
+  int hasLower = 0, hasUpper = 0, hasDigit = 0, hasSpecial = 0;
+  for (int i = 0; i < n; i++) {
+    if (password[i].contains(RegExp(r'[A-Z]'))) {
+      hasUpper = 1;
+    } else if (password[i].contains(RegExp(r'[a-z]'))) {
+      hasLower = 1;
+    } else if (password[i].contains(RegExp(r'[0-9]'))) {
+      hasDigit = 1;
+    } else {
+      hasSpecial = 1;
+    }
+  }
+  return (hasLower + hasUpper + hasDigit + hasSpecial) == 4;
 }

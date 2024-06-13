@@ -26,7 +26,7 @@ class _DashScreenState extends State<DashScreen> {
           "Top Rated",
           style: TextStyle(fontSize: 18),
         ),
-        const SizedBox(height: 5.0),
+        const SizedBox(height: 2.0),
         Expanded(child: HomePage()),
         // HomePage()
       ],
