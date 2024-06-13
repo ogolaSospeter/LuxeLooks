@@ -5,7 +5,8 @@ import 'package:luxelooks/models/forgot_password.dart';
 
 class VerifyOtp extends StatefulWidget {
   final String email;
-  const VerifyOtp({super.key, required this.email});
+  final EmailOTP myAuth;
+  const VerifyOtp({super.key, required this.email, required this.myAuth});
 
   @override
   State<VerifyOtp> createState() => _VerifyOtpState();
@@ -63,11 +64,11 @@ class _VerifyOtpState extends State<VerifyOtp> {
           height: 50,
           child: MaterialButton(
             color: Colors.blueAccent,
-            onPressed: () {
+            onPressed: () async {
               if (formKey.currentState!.validate()) {
                 //compare the OTP input by the user and the OTP sent to the email
                 var userOtp = _otpControllers.map((e) => e.text).join();
-                if (myAuth.verifyOTP(otp: userOtp)) {
+                if (await widget.myAuth.verifyOTP(otp: userOtp)) {
                   //navigate to the next screen
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => const MyHomePage()),

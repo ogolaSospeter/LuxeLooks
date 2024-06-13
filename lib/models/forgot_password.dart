@@ -41,6 +41,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         MaterialPageRoute(
           builder: (context) => VerifyOtp(
             email: emailController.text,
+            myAuth: myAuth,
           ),
         ),
       );
